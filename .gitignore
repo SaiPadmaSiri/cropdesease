@@ -1,0 +1,27 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Virtual environment
+venv/
+
+# Jupyter
+.ipynb_checkpoints/
+
+# Mac/Linux
+.DS_Store
+
+# Environment
+.env
+
+# Logs
+*.log
+
+# Model files (tracked via Git LFS)
+model/*.keras
+model/*.h5
+
+# Static uploads
+static/uploads/
+
