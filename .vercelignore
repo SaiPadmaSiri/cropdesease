@@ -1,0 +1,16 @@
+# Exclude virtualenv and local env
+venv/
+.env
+
+# Exclude model files from serverless bundle (host externally instead)
+model/
+
+# Exclude uploaded media and large static files
+static/uploads/
+
+# Node/Python build dirs
+__pycache__/
+*.pyc
+
+# Misc
+.DS_Store
