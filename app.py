@@ -71,7 +71,14 @@ def init_db():
 
 init_db()
 
-model = load_model("model/crop_disease_model.keras")
+# Ensure model exists (downloads at runtime if MODEL_URL is provided)
+from download_model import ensure_model_present
+
+MODEL_PATH = os.path.join("model", "crop_disease_model.keras")
+os.makedirs(os.path.dirname(MODEL_PATH), exist_ok=True)
+ensure_model_present(MODEL_PATH)
+
+model = load_model(MODEL_PATH)
 
 class_names = [
     "Apple - Apple Scab", 
