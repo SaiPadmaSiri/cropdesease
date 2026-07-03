@@ -4,7 +4,7 @@ Deployment notes for Vercel:
 
 - Set the following Environment Variables in the Vercel project settings:
   - `MODEL_URL` — public or signed URL where the model file can be downloaded (e.g. S3 presigned URL).
-  - `WEATHER_API_KEY` — (optional) your weather API key.
+  - `WEATHER_API_KEY` — optional. If unset, the app uses simulated weather values until you add the key.
   - `SECRET_KEY` — set a secure secret for Flask sessions (overrides default in code).
 
 - The repository excludes `model/` and `venv/` from the deployment bundle via `.vercelignore`.

@@ -22,7 +22,7 @@ from reportlab.lib import colors
 from reportlab.lib.pagesizes import letter
 
 app = Flask(__name__)
-app.secret_key = "AGRONETRA_AI_SECRET_KEY_2026"
+app.secret_key = os.getenv("SECRET_KEY", "AGRONETRA_AI_SECRET_KEY_2026")
 
 # ==================================================
 # Configurations & Database Initialization
@@ -34,7 +34,7 @@ app.config["UPLOAD_FOLDER"] = UPLOAD_FOLDER
 os.makedirs(UPLOAD_FOLDER, exist_ok=True)
 os.makedirs(CHARTS_FOLDER, exist_ok=True)
 
-WEATHER_API_KEY = "YOUR_API_KEY"
+WEATHER_API_KEY = os.getenv("WEATHER_API_KEY", "")
 
 def init_db():
     conn = sqlite3.connect("agronetra.db")
