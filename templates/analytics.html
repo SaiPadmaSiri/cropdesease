@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AGRONETRA — Farm Intelligence Analytics</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        canvas { margin-top: 20px; max-height: 400px; width: 100% !important; }
+        .chart-wrapper { position: relative; margin: 0 auto; width: 100%; max-width: 550px; }
+    </style>
+</head>
+<body>
+
+    <header class="hero-header">
+        <img src="{{ url_for('static', filename='images/logo.png') }}" alt="AGRONETRA" class="logo">
+        <h1>AGRONETRA Analytics</h1>
+        <p>AI Crop Intelligence Insights & Operational Data Matrix</p>
+    </header>
+
+    <div class="nav-buttons">
+        <a href="/home">Home Workspace</a>
+        <a href="/history">Analytics History</a>
+        <a href="/analytics">Live Charts</a>
+    </div>
+
+    <div class="container" style="max-width: 850px;">
+
+        <div class="main-card" style="border-top: 4px solid #43a047;">
+            <h2 style="color: #2e7d32; margin-top: 0; margin-bottom: 5px; font-size: 20px; font-weight: bold;">Epidemic Disease Distribution Trends</h2>
+            <p style="color: #666; font-size: 13px; margin: 0 0 15px 0;">Proportional classification distribution across current seasonal scan batches</p>
+            <div class="chart-wrapper">
+                <canvas id="diseaseChart"></canvas>
+            </div>
+        </div>
+
+        <div class="main-card" style="border-top: 4px solid #43a047;">
+            <h2 style="color: #2e7d32; margin-top: 0; margin-bottom: 5px; font-size: 20px; font-weight: bold;">Pathological Recovery Window Forecast</h2>
+            <p style="color: #666; font-size: 13px; margin: 0 0 15px 0;">Comparative structural recovery success percentages assuming active treatment plans</p>
+            <canvas id="recoveryChart"></canvas>
+        </div>
+
+        <div class="main-card" style="border-top: 4px solid #e53935;">
+            <h2 style="color: #2e7d32; margin-top: 0; margin-bottom: 5px; font-size: 20px; font-weight: bold;">Countermeasure Lifecycle Deterioration Trend</h2>
+            <p style="color: #666; font-size: 13px; margin: 0 0 15px 0;">Systemic decay trajectory of targeted pathogens post-remediation deployment</p>
+            <canvas id="severityChart"></canvas>
+        </div>
+
+    </div>
+
+    <footer>
+        AGRONETRA Crop Intelligence Systems v1.0 © 2026
+    </footer>
+
+    <script>
+        // Disease Distribution Pie Chart Configuration
+        new Chart(document.getElementById('diseaseChart'), {
+            type: 'pie',
+            data: {
+                labels: ['Healthy States', 'Rust Outbreaks', 'Leaf Mold Traces', 'Blight Extentions', 'Scorch Margins'],
+                datasets: [{
+                    data: [40, 20, 15, 15, 10],
+                    backgroundColor: ['#43a047', '#ff9800', '#fbc02d', '#e53935', '#203a43'],
+                    borderWidth: 2,
+                    borderColor: '#ffffff'
+                }]
+            },
+            options: {
+                responsive: true,
+                plugins: {
+                    legend: { position: 'bottom', labels: { font: { family: 'Poppins' } } }
+                }
+            }
+        });
+
+        // Recovery Analysis Bar Chart Configuration
+        new Chart(document.getElementById('recoveryChart'), {
+            type: 'bar',
+            data: {
+                labels: ['Healthy States', 'Rust Outbreaks', 'Leaf Mold Traces', 'Blight Extentions', 'Scorch Margins'],
+                datasets: [{
+                    label: 'Recovery Efficiency Rate (%)',
+                    data: [100, 85, 80, 65, 70],
+                    backgroundColor: 'rgba(76, 175, 80, 0.75)',
+                    borderColor: '#43a047',
+                    borderWidth: 2,
+                    borderRadius: 6
+                }]
+            },
+            options: {
+                responsive: true,
+                scales: {
+                    y: { beginAtZero: true, max: 100, ticks: { font: { family: 'Poppins' } } },
+                    x: { ticks: { font: { family: 'Poppins' } } }
+                },
+                plugins: {
+                    legend: { labels: { font: { family: 'Poppins' } } }
+                }
+            }
+        });
+
+        // Severity Mitigation Lifecycle Trend Configuration
+        new Chart(document.getElementById('severityChart'), {
+            type: 'line',
+            data: {
+                labels: ['Ingestion Day 1', 'Dose Day 2', 'Audit Day 3', 'Drying Day 5', 'Stabilization Day 7'],
+                datasets: [{
+                    label: 'Active Pathological Infestation Level (%)',
+                    data: [80, 65, 50, 30, 10],
+                    borderColor: '#e53935',
+                    backgroundColor: 'rgba(229, 57, 53, 0.05)',
+                    fill: true,
+                    tension: 0.3,
+                    borderWidth: 3,
+                    pointBackgroundColor: '#e53935'
+                }]
+            },
+            options: {
+                responsive: true,
+                scales: {
+                    y: { beginAtZero: true, max: 100, ticks: { font: { family: 'Poppins' } } },
+                    x: { ticks: { font: { family: 'Poppins' } } }
+                },
+                plugins: {
+                    legend: { labels: { font: { family: 'Poppins' } } }
+                }
+            }
+        });
+    </script>
+
+</body>
+</html>

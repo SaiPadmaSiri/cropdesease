@@ -1,0 +1,578 @@
+<!DOCTYPE html>
+<html lang="{{ session.get('language','en') }}">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}AGRONETRA{% endblock %}</title>
+
+    <meta name="theme-color" content="#1f8f5f">
+    <meta name="description" content="AGRONETRA AI Crop Disease Intelligence Platform">
+
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+
+    <!-- Material Icons -->
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons+Rounded" rel="stylesheet">
+
+    <!-- Main CSS -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/main.css') }}">
+
+    {% block head %}{% endblock %}
+</head>
+
+<body>
+
+<!-- ================================================= -->
+<!-- Loading Screen -->
+<!-- ================================================= -->
+
+<div id="loading-screen">
+    <div class="loader-card">
+
+        <div class="loader-logo">
+            🌱
+        </div>
+
+        <h1>AGRONETRA</h1>
+
+        <p>AI Powered Crop Intelligence</p>
+
+        <div class="loader-bar">
+            <span></span>
+        </div>
+
+    </div>
+</div>
+
+<!-- ================================================= -->
+<!-- Scroll Progress -->
+<!-- ================================================= -->
+
+<div id="scroll-progress"></div>
+
+<!-- ================================================= -->
+<!-- App Layout -->
+<!-- ================================================= -->
+
+<div class="app-container">
+
+    <!-- ============================================= -->
+    <!-- Top App Bar -->
+    <!-- ============================================= -->
+
+    <header class="topbar">
+
+        <button id="drawer-toggle"
+                class="icon-btn ripple">
+
+            <span class="material-icons-rounded">
+                menu
+            </span>
+
+        </button>
+
+        <div class="brand-area">
+
+            <div class="brand-logo">
+                🌿
+            </div>
+
+            <div class="brand-text">
+
+                <h2>AGRONETRA</h2>
+
+                <small>
+                    AI Crop Intelligence
+                </small>
+
+            </div>
+
+        </div>
+
+        <div class="topbar-actions">
+
+            <a href="/language"
+               class="icon-btn ripple">
+
+                <span class="material-icons-rounded">
+                    translate
+                </span>
+
+            </a>
+
+            {% if session.get("farmer_id") %}
+
+            <a href="/logout"
+               class="icon-btn ripple">
+
+                <span class="material-icons-rounded">
+                    logout
+                </span>
+
+            </a>
+
+            {% endif %}
+
+        </div>
+
+    </header>
+
+    <!-- ============================================= -->
+    <!-- Drawer Overlay -->
+    <!-- ============================================= -->
+
+    <div id="drawer-overlay"></div>
+
+    <!-- ============================================= -->
+    <!-- Navigation Drawer -->
+    <!-- ============================================= -->
+
+    <aside id="drawer">
+
+        <div class="drawer-header">
+
+            <div class="drawer-avatar">
+
+                {{ session.get("farmer_name","A")[0]|upper }}
+
+            </div>
+
+            <div>
+
+                <h3>
+
+                    {{ session.get("farmer_name","Guest") }}
+
+                </h3>
+
+                <small>
+
+                    AI Farmer Dashboard
+
+                </small>
+
+            </div>
+
+        </div>
+
+        <nav class="drawer-menu">
+
+            <a href="/home"
+               class="nav-item"
+               data-page="home">
+
+                <span class="material-icons-rounded">
+
+                    dashboard
+
+                </span>
+
+                <span>
+
+                    Dashboard
+
+                </span>
+
+            </a>
+
+            <a href="/history"
+               class="nav-item"
+               data-page="history">
+
+                <span class="material-icons-rounded">
+
+                    history
+
+                </span>
+
+                <span>
+
+                    Prediction History
+
+                </span>
+
+            </a>
+
+            <a href="/analytics"
+               class="nav-item"
+               data-page="analytics">
+
+                <span class="material-icons-rounded">
+
+                    insights
+
+                </span>
+
+                <span>
+
+                    Analytics
+
+                </span>
+
+            </a>
+
+            <a href="/chat"
+               class="nav-item"
+               data-page="chat">
+
+                <span class="material-icons-rounded">
+
+                    smart_toy
+
+                </span>
+
+                <span>
+
+                    AI Crop Doctor
+
+                </span>
+
+            </a>
+                        <a href="/language"
+               class="nav-item"
+               data-page="language">
+
+                <span class="material-icons-rounded">
+                    translate
+                </span>
+
+                <span>
+                    Language
+                </span>
+
+            </a>
+
+            <a href="/profile"
+               class="nav-item"
+               data-page="profile">
+
+                <span class="material-icons-rounded">
+                    account_circle
+                </span>
+
+                <span>
+                    Profile
+                </span>
+
+            </a>
+
+            <a href="/logout"
+               class="nav-item logout-item">
+
+                <span class="material-icons-rounded">
+                    logout
+                </span>
+
+                <span>
+                    Logout
+                </span>
+
+            </a>
+
+        </nav>
+
+        <div class="drawer-footer">
+
+            <div class="version-card">
+
+                <div class="version-icon">
+
+                    <span class="material-icons-rounded">
+                        verified
+                    </span>
+
+                </div>
+
+                <div>
+
+                    <h4>AGRONETRA</h4>
+
+                    <small>Version 1.0 • AI Enabled</small>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </aside>
+
+    <!-- ============================================= -->
+    <!-- Main Content -->
+    <!-- ============================================= -->
+
+    <main id="page-content">
+
+        <div class="page-wrapper">
+
+            {% block content %}
+
+            {% endblock %}
+
+        </div>
+
+    </main>
+
+    <!-- ============================================= -->
+    <!-- Floating Scan Button -->
+    <!-- ============================================= -->
+
+    {% if session.get("farmer_id") %}
+
+    <button id="fab-scan"
+            class="fab ripple"
+            onclick="window.location.href='/home#scan-section'">
+
+        <span class="material-icons-rounded">
+
+            document_scanner
+
+        </span>
+
+    </button>
+
+    {% endif %}
+
+    <!-- ============================================= -->
+    <!-- Bottom Navigation -->
+    <!-- ============================================= -->
+
+    {% if session.get("farmer_id") %}
+
+    <nav class="bottom-nav">
+
+        <a href="/home"
+           class="bottom-item"
+           data-page="home">
+
+            <span class="material-icons-rounded">
+
+                home
+
+            </span>
+
+            <small>Home</small>
+
+        </a>
+
+        <a href="/history"
+           class="bottom-item"
+           data-page="history">
+
+            <span class="material-icons-rounded">
+
+                history
+
+            </span>
+
+            <small>History</small>
+
+        </a>
+
+        <div class="bottom-space"></div>
+
+        <a href="/analytics"
+           class="bottom-item"
+           data-page="analytics">
+
+            <span class="material-icons-rounded">
+
+                analytics
+
+            </span>
+
+            <small>Analytics</small>
+
+        </a>
+
+        <a href="/chat"
+           class="bottom-item"
+           data-page="chat">
+
+            <span class="material-icons-rounded">
+
+                psychology
+
+            </span>
+
+            <small>AI Doctor</small>
+
+        </a>
+
+    </nav>
+
+    {% endif %}
+
+    <!-- ============================================= -->
+    <!-- Scroll To Top -->
+    <!-- ============================================= -->
+
+    <button id="scrollTopBtn"
+            class="scroll-top ripple">
+
+        <span class="material-icons-rounded">
+
+            keyboard_arrow_up
+
+        </span>
+
+    </button>
+
+    <!-- ============================================= -->
+    <!-- Toast -->
+    <!-- ============================================= -->
+
+    <div id="toast">
+
+        <span id="toast-message"></span>
+
+    </div>
+        <!-- ============================================= -->
+    <!-- Global Modal -->
+    <!-- ============================================= -->
+
+    <div id="global-modal" class="modal">
+
+        <div class="modal-backdrop"></div>
+
+        <div class="modal-card">
+
+            <button class="modal-close ripple">
+
+                <span class="material-icons-rounded">
+                    close
+                </span>
+
+            </button>
+
+            <div id="modal-content">
+
+            </div>
+
+        </div>
+
+    </div>
+
+    <!-- ============================================= -->
+    <!-- Offline Banner -->
+    <!-- ============================================= -->
+
+    <div id="offline-banner">
+
+        <span class="material-icons-rounded">
+            wifi_off
+        </span>
+
+        <span>
+
+            No Internet Connection
+
+        </span>
+
+    </div>
+
+    <!-- ============================================= -->
+    <!-- Page Transition -->
+    <!-- ============================================= -->
+
+    <div id="page-transition">
+
+        <div class="transition-circle"></div>
+
+    </div>
+
+    <!-- ============================================= -->
+    <!-- Floating Background -->
+    <!-- ============================================= -->
+
+    <div class="background-effects">
+
+        <span class="blob blob1"></span>
+
+        <span class="blob blob2"></span>
+
+        <span class="blob blob3"></span>
+
+        <span class="grid-overlay"></span>
+
+    </div>
+
+    <!-- ============================================= -->
+    <!-- Footer -->
+    <!-- ============================================= -->
+
+    <footer class="footer">
+
+        <div class="footer-left">
+
+            <h3>AGRONETRA</h3>
+
+            <p>
+
+                AI Powered Crop Disease Intelligence Platform
+
+            </p>
+
+        </div>
+
+        <div class="footer-right">
+
+            <a href="/home">
+
+                Home
+
+            </a>
+
+            <a href="/history">
+
+                History
+
+            </a>
+
+            <a href="/analytics">
+
+                Analytics
+
+            </a>
+
+            <a href="/chat">
+
+                AI Doctor
+
+            </a>
+
+        </div>
+
+    </footer>
+
+</div>
+
+<!-- ============================================= -->
+<!-- Scripts -->
+<!-- ============================================= -->
+
+<script>
+
+window.APP_CONFIG = {
+
+    currentPath: "{{ request.path }}",
+
+    farmerName: "{{ session.get('farmer_name','Guest') }}",
+
+    language: "{{ session.get('language','en') }}"
+
+};
+
+</script>
+
+<script src="{{ url_for('static', filename='js/main.js') }}"></script>
+
+{% block scripts %}
+
+{% endblock %}
+
+</body>
+</html>

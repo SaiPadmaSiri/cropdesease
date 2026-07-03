@@ -1,0 +1,569 @@
+/* ============================================================
+   AGRONETRA LIGHT-AMBIENT STARTUP DESIGN SYSTEM CORE
+   ============================================================ */
+
+/* Added Noto Sans Telugu for proper Dravidian script rendering */
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&family=Noto+Sans+Telugu:wght@400;600;700&display=swap');
+
+body {
+    font-family: 'Noto Sans Telugu', 'Poppins', sans-serif;
+    min-height: 100vh;
+    margin: 0;
+    padding: 0;
+    overflow-x: hidden;
+    background: linear-gradient(135deg, #f8fff8 0%, #eefbf0 40%, #ffffff 100%);
+    color: #2e7d32;
+}
+
+/* ============================================================
+   BACKGROUNDS & OVERLAYS
+   ============================================================ */
+.bg-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: url('/static/images/farm-bg.jpg') center center/cover no-repeat;
+    opacity: 0.08;
+    z-index: -2;
+}
+
+.floating-leaf { 
+    position: fixed; 
+    font-size: 24px; 
+    pointer-events: none; 
+    opacity: 0.15; 
+    z-index: -1; 
+    animation: floatLeaf 15s linear infinite; 
+}
+.leaf1 { top: 15%; left: 8%; animation-delay: 0s; }
+.leaf2 { top: 65%; left: 85%; animation-duration: 18s; animation-delay: 3s; }
+.leaf3 { top: 80%; left: 12%; animation-duration: 12s; animation-delay: 6s; }
+
+@keyframes floatLeaf {
+    0% { transform: translateY(0) rotate(0deg) scale(1); opacity: 0; }
+    10% { opacity: 0.3; }
+    90% { opacity: 0.3; }
+    100% { transform: translateY(-120px) rotate(360deg) scale(1.2); opacity: 0; }
+}
+
+/* ============================================================
+   NATIVE REDIRECT SPLASH SCREEN
+   ============================================================ */
+#splash-screen {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: white;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    z-index: 99999;
+}
+
+.splash-logo {
+    width: 220px;
+    animation: zoomIn 2s ease;
+}
+
+#splash-screen h1 {
+    font-size: 32px;
+    font-weight: 800;
+    color: #2e7d32;
+    margin-top: 15px;
+    letter-spacing: 1px;
+}
+
+@keyframes zoomIn {
+    from { transform: scale(0.6); opacity: 0; }
+    to { transform: scale(1); opacity: 1; }
+}
+
+/* ============================================================
+   BRANDING HEADERS & NAVIGATION
+   ============================================================ */
+.hero-header {
+    background: linear-gradient(135deg, #43a047, #66bb6a);
+    padding: 40px 20px;
+    text-align: center;
+    border-radius: 25px 25px 0 0;
+    color: white;
+    box-shadow: 0 4px 20px rgba(76, 175, 80, 0.15);
+}
+
+.hero-header h1 {
+    color: white;
+    font-size: 48px;
+    font-weight: 800;
+    margin: 0;
+}
+
+.hero-header p {
+    color: #f1f8e9;
+    font-size: 17px;
+    margin: 8px 0 0 0;
+}
+
+.logo {
+    width: 180px;
+    display: block;
+    margin: 0 auto 20px;
+    transition: 0.4s;
+}
+
+.logo:hover {
+    transform: scale(1.05);
+}
+
+.hero-image {
+    width: 150px;
+    height: auto;
+    margin: 0 auto 20px auto;
+    display: block;
+    animation: float 4s ease-in-out infinite;
+    filter: drop-shadow(0 6px 12px rgba(76, 175, 80, 0.2));
+}
+
+@keyframes float {
+    0% { transform: translateY(0px); }
+    50% { transform: translateY(-12px); }
+    100% { transform: translateY(0px); }
+}
+
+.nav-buttons {
+    text-align: center;
+    padding: 20px;
+}
+
+.nav-buttons a {
+    text-decoration: none;
+    background: white;
+    color: #2e7d32;
+    padding: 10px 22px;
+    margin: 5px;
+    border-radius: 30px;
+    font-size: 14px;
+    font-weight: 600;
+    border: 1px solid #dcedc8;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+    transition: all 0.3s ease;
+    display: inline-block;
+}
+
+.nav-buttons a:hover {
+    background: #43a047;
+    color: white;
+    border-color: #43a047;
+    box-shadow: 0 4px 12px rgba(76, 175, 80, 0.3);
+}
+
+/* ============================================================
+   WORKSPACE CONTAINERS & CARDS
+   ============================================================ */
+.container {
+    width: 90%;
+    max-width: 950px;
+    margin: 20px auto 40px auto;
+    padding: 10px;
+    box-sizing: border-box;
+}
+
+/* Added word-wrap parameters to prevent vertical text breaking */
+.main-card, .card, .stat-card, .feature-card {
+    word-break: normal;
+    overflow-wrap: break-word;
+    line-height: 1.7;
+}
+
+.main-card {
+    background: white;
+    border-radius: 25px;
+    padding: 35px;
+    box-shadow: 0 10px 40px rgba(0,0,0,0.08);
+    border: none;
+    margin-bottom: 30px;
+    transition: transform 0.4s cubic-bezier(0.165, 0.84, 0.44, 1), box-shadow 0.4s ease;
+}
+
+.main-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 12px 35px rgba(0, 0, 0, 0.12);
+}
+
+.card {
+    background: white;
+    border-radius: 20px;
+    box-shadow: 0 8px 25px rgba(0,0,0,0.07);
+    border: 1px solid #e8f5e9;
+    color: #333333;
+    padding: 25px;
+    margin: 20px 0;
+}
+
+/* ============================================================
+   GRID DASHBOARDS & FEATURE CARDS
+   ============================================================ */
+.dashboard-grid {
+    display: grid;
+    /* Increased minmax to 300px to give Telugu text more horizontal space */
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 25px;
+    margin: 30px 0;
+}
+
+.feature-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 20px;
+    margin: 30px 0;
+}
+
+.stat-card {
+    background: white;
+    border-radius: 20px;
+    border: 1px solid #dcedc8;
+    box-shadow: 0 6px 20px rgba(0,0,0,0.06);
+    padding: 25px 20px;
+    text-align: center;
+    transition: 0.4s;
+}
+
+.stat-card:hover {
+    transform: translateY(-8px);
+}
+
+.stat-card h2 {
+    margin: 0;
+    font-size: 36px;
+    font-weight: 700;
+    color: #2e7d32;
+}
+
+.stat-card p {
+    margin: 8px 0 0 0;
+    font-size: 13px;
+    color: #555555;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    font-weight: 500;
+}
+
+.feature-card {
+    background: white;
+    border: 1px solid #e8f5e9;
+    border-radius: 16px;
+    padding: 20px;
+    text-align: left;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.04);
+    transition: all 0.4s cubic-bezier(0.165, 0.84, 0.44, 1);
+}
+
+.feature-card:hover {
+    transform: translateY(-10px);
+    border-color: #43a047;
+    box-shadow: 0 10px 30px rgba(76, 175, 80, 0.15);
+}
+
+/* ============================================================
+   FORMS, BUTTONS & INPUTS
+   ============================================================ */
+select, input[type="text"], input[type="number"] {
+    width: 100%;
+    padding: 12px;
+    background: #fbfdfb;
+    border: 1px solid #ccdcd0;
+    border-radius: 8px;
+    color: #333333;
+    font-size: 14px;
+    outline: none;
+    box-sizing: border-box;
+    transition: all 0.3s ease;
+}
+
+select:focus, input[type="text"]:focus, input[type="number"]:focus {
+    border-color: #43a047;
+    box-shadow: 0 0 8px rgba(76, 175, 80, 0.2);
+}
+
+.btn-predict {
+    background: linear-gradient(45deg, #43a047, #66bb6a);
+    color: white;
+    border: none;
+    padding: 16px;
+    border-radius: 50px;
+    font-size: 18px;
+    font-weight: 600;
+    cursor: pointer;
+    width: 100%;
+    transition: 0.4s;
+}
+
+.btn-predict:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 10px 30px rgba(76, 175, 80, 0.4);
+}
+
+.btn-secondary {
+    background: #f1f8e9;
+    border: 1px solid #cbdcc3;
+    color: #2e7d32;
+    padding: 14px 28px;
+    border-radius: 50px;
+    text-decoration: none;
+    font-weight: 600;
+    display: inline-block;
+    transition: all 0.3s ease;
+    text-align: center;
+}
+
+.btn-secondary:hover {
+    background: #e8f5e9;
+    border-color: #43a047;
+}
+
+.comparison-toggle-btn { 
+    background: #f1f8e9; 
+    border: 1px solid #cbdcc3; 
+    color: #2e7d32; 
+    padding: 10px 22px; 
+    border-radius: 30px; 
+    font-weight: 600; 
+    font-size: 14px; 
+    cursor: pointer; 
+    transition: all 0.3s ease; 
+    margin: 20px 0; 
+    display: inline-block; 
+}
+.comparison-toggle-btn:hover { 
+    background: #43a047; 
+    color: white; 
+    border-color: #43a047; 
+}
+
+.comparison-box { 
+    display: none; 
+    margin-top: 15px; 
+    animation: fadeIn 0.5s ease-in-out forwards; 
+}
+
+@keyframes fadeIn { 
+    from { opacity: 0; transform: translateY(10px); } 
+    to { opacity: 1; transform: translateY(0); } 
+}
+
+/* ============================================================
+   DIAGNOSTIC VISUALS & SEVERITY GAUGES
+   ============================================================ */
+.result-image-frame {
+    max-width: 350px;
+    width: 100%;
+    height: auto;
+    border-radius: 20px;
+    border: 5px solid #e8f5e9;
+    box-shadow: 0 12px 30px rgba(0, 0, 0, 0.15);
+    margin: 20px auto;
+    display: block;
+}
+
+/* Color Severity Semantic Token Maps */
+.healthy { color: #43a047 !important; font-weight: 700; }
+.mild { color: #fbc02d !important; font-weight: 700; }
+.moderate { color: #ff9800 !important; font-weight: 700; }
+.severe { color: #e53935 !important; font-weight: 700; }
+.critical { color: #e53935 !important; font-weight: 700; }
+.routine { color: #43a047 !important; font-weight: 700; }
+
+.severity-gauge-track { 
+    background: #f5f5f5; 
+    width: 100%; 
+    height: 12px; 
+    border-radius: 50px; 
+    overflow: hidden; 
+    margin-top: 10px; 
+    border: 1px solid #e2e8f0; 
+}
+.severity-gauge-fill { 
+    height: 100%; 
+    border-radius: 50px; 
+    transition: width 1.5s cubic-bezier(0.1, 0.8, 0.2, 1); 
+}
+.fill-healthy { width: 5%; background: #43a047; }
+.fill-mild { width: 25%; background: #fbc02d; }
+.fill-moderate { width: 55%; background: #ff9800; }
+.fill-severe { width: 90%; background: #e53935; }
+
+.simulator-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 15px; margin-top: 15px; }
+.simulator-timeline-node { background: #f9fbf9; border: 1px solid #e8f5e9; padding: 12px; border-radius: 10px; text-align: center; }
+.simulator-bar-track { background: #e2e8f0; width: 100%; height: 6px; border-radius: 10px; overflow: hidden; margin-top: 8px; }
+.simulator-bar-fill { height: 100%; background: #43a047; }
+
+.xai-visualization-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 20px; margin-top: 15px; text-align: center; }
+.xai-frame-node { background: #fafafa; border: 1px solid #eef2f5; padding: 15px; border-radius: 12px; box-shadow: 0 4px 12px rgba(0,0,0,0.02); }
+.xai-frame-node img { width: 100%; height: auto; max-width: 320px; border-radius: 8px; display: block; margin: 0 auto; object-fit: cover; box-shadow: 0 4px 10px rgba(0,0,0,0.08); }
+
+/* ============================================================
+   TABLES & AUDIT LOGS
+   ============================================================ */
+table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 25px;
+    background: white;
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.04);
+}
+
+table th {
+    background: #e8f5e9;
+    color: #2e7d32;
+    padding: 14px 16px;
+    font-weight: 600;
+    font-size: 14px;
+    text-align: left;
+    border-bottom: 1px solid #dcedc8;
+}
+
+table td {
+    padding: 14px 16px;
+    border-bottom: 1px solid #f1f1f1;
+    color: #444444;
+    font-size: 13.5px;
+}
+
+table tr:hover {
+    background: #f9fbf9;
+}
+
+/* ============================================================
+   CONVERSATIONAL AI CHATBOT
+   ============================================================ */
+.quick-btn {
+    padding: 8px 16px;
+    font-size: 12.5px;
+    background: #f1f8e9;
+    border: 1px solid #cbdcc3;
+    border-radius: 20px;
+    cursor: pointer;
+    color: #2e7d32;
+    font-weight: 500;
+    transition: all 0.2s ease;
+}
+
+.quick-btn:hover {
+    background: #43a047;
+    color: white;
+    border-color: #43a047;
+}
+
+.chat-response {
+    margin-top: 15px;
+    background: #f9fbf9;
+    border-left: 4px solid #43a047;
+    padding: 15px;
+    border-radius: 8px;
+    font-size: 14px;
+    color: #333333;
+    line-height: 1.5;
+    border: 1px solid #e8f5e9;
+    border-left-width: 5px;
+}
+
+/* ============================================================
+   PULSE LOADER TELEMETRY 
+   ============================================================ */
+#loader {
+    display: none;
+    background: rgba(255, 255, 255, 0.95);
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 9999;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    color: #2e7d32;
+    font-weight: 700;
+    font-size: 20px;
+    letter-spacing: 1px;
+}
+
+.loader-spinner {
+    width: 60px;
+    height: 60px;
+    border: 5px solid #e8f5e9;
+    border-top-color: #43a047;
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+    margin-bottom: 20px;
+}
+
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
+/* ============================================================
+   WARNING BOX & UTILITIES
+   ============================================================ */
+.warning-box {
+    background-color: #f8d7da;
+    color: #721c24;
+    padding: 15px;
+    border-radius: 8px;
+    border-left: 5px solid #dc3545;
+    margin-bottom: 20px;
+    font-weight: bold;
+    text-align: left;
+    box-shadow: 0 2px 8px rgba(220, 53, 69, 0.08);
+}
+
+.tech-spec-box { 
+    display: grid; 
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); 
+    gap: 10px; 
+    background: #fbfdfb; 
+    border: 1px solid #eef2f5; 
+    padding: 15px; 
+    border-radius: 10px; 
+    margin-top: 25px; 
+    text-align: left; 
+}
+.tech-spec-item { font-size: 13px; color: #555; }
+.tech-spec-item strong { color: #2e7d32; }
+
+/* ============================================================
+   CHART.JS CANVAS ALIGNMENT
+   ============================================================ */
+canvas {
+    margin-top: 20px;
+    max-height: 400px;
+    width: 100% !important;
+}
+.chart-wrapper {
+    position: relative;
+    margin: 0 auto;
+    width: 100%;
+    max-width: 550px;
+}
+
+/* ============================================================
+   UNIVERSAL STICKY FOOTER
+   ============================================================ */
+footer {
+    background: #f1f8e9;
+    color: #2e7d32;
+    text-align: center;
+    padding: 20px;
+    margin-top: 60px;
+    font-size: 13.5px;
+    font-weight: 600;
+    letter-spacing: 0.5px;
+    border-top: 1px solid #cbdcc3;
+}

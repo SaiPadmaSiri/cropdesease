@@ -1,0 +1,216 @@
+<!DOCTYPE html>
+<html lang="{{ session.get('language', 'en') }}">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ lang.reg_title }} | AGRONETRA</title>
+    
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700;800&family=Noto+Sans+Telugu:wght@400;600;700&display=swap" rel="stylesheet">
+    
+    <style>
+        * {
+            box-sizing: border-box;
+            font-family: 'Noto Sans Telugu', 'Poppins', sans-serif;
+        }
+
+        body {
+            margin: 0;
+            min-height: 100vh;
+            background: linear-gradient(135deg, #8BC34A, #2E7D32);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+
+        .login-card {
+            width: 100%;
+            max-width: 430px;
+            background: white;
+            border-radius: 35px;
+            padding: 35px 30px;
+            text-align: center;
+            box-shadow: 0 20px 45px rgba(0,0,0,.25);
+        }
+
+        .language-badge {
+            display: inline-block;
+            background: #E8F5E9;
+            color: #1B5E20;
+            padding: 8px 16px;
+            border-radius: 25px;
+            font-weight: 600;
+            margin-bottom: 15px;
+        }
+
+        .logo {
+            width: 95px;
+        }
+
+        .app-name {
+            color: #2E7D32;
+            font-size: 26px;
+            font-weight: 800;
+            margin: 10px 0 5px;
+        }
+
+        .welcome {
+            font-size: 20px;
+            font-weight: 700;
+            color: #333;
+            margin-top: 15px;
+        }
+
+        .subtitle {
+            color: #666;
+            font-size: 14px;
+            margin-bottom: 25px;
+            line-height: 1.5;
+        }
+
+        .input-group {
+            margin: 15px 0;
+        }
+
+        .input-group input {
+            width: 100%;
+            padding: 17px;
+            font-size: 16px;
+            border-radius: 18px;
+            border: 2px solid #DCEFD8;
+            outline: none;
+            transition: 0.3s;
+        }
+
+        .input-group input:focus {
+            border-color: #43A047;
+        }
+
+        .login-btn {
+            width: 100%;
+            background: #2E7D32;
+            color: white;
+            border: none;
+            padding: 17px;
+            border-radius: 35px;
+            font-size: 18px;
+            font-weight: bold;
+            cursor: pointer;
+            margin-top: 10px;
+            transition: .3s;
+        }
+
+        .login-btn:hover {
+            background: #1B5E20;
+            transform: translateY(-2px);
+        }
+
+        .error {
+            background: #FFEBEE;
+            color: #C62828;
+            padding: 12px;
+            border-radius: 12px;
+            margin-bottom: 15px;
+            font-weight: bold;
+        }
+
+        .register {
+            margin-top: 22px;
+            color: #555;
+            font-size: 15px;
+        }
+
+        .register a {
+            color: #2E7D32;
+            font-weight: bold;
+            text-decoration: none;
+        }
+
+        @media(max-width: 480px) {
+            .app-name {
+                font-size: 22px;
+            }
+            .welcome {
+                font-size: 18px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="login-card">
+
+        <div class="language-badge">
+            🌍 {{ session.get('language', 'EN').upper() }}
+        </div>
+
+        <img src="{{ url_for('static', filename='images/logo.png') }}" class="logo">
+
+        <h1 class="app-name">🌱 AGRONETRA</h1>
+
+        <div class="welcome">
+            {{ lang.reg_title }}
+        </div>
+
+        <p class="subtitle">
+            {{ lang.reg_sub }}
+        </p>
+
+        {% if error %}
+        <div class="error">
+            {{ error }}
+        </div>
+        {% endif %}
+
+        <form method="POST" action="/register">
+
+            <div class="input-group">
+                <input 
+                    type="text"
+                    name="name"
+                    placeholder="{{ lang.reg_name }}"
+                    required>
+            </div>
+
+            <div class="input-group">
+                <input 
+                    type="text"
+                    name="phone"
+                    placeholder="{{ lang.reg_phone }}"
+                    required>
+            </div>
+
+            <div class="input-group">
+                <input 
+                    type="password"
+                    name="password"
+                    placeholder="{{ lang.reg_pass }}"
+                    required>
+            </div>
+            
+            <div class="input-group">
+                <input 
+                    type="text"
+                    name="location"
+                    placeholder="{{ lang.reg_loc }}"
+                    required>
+            </div>
+
+            <button class="login-btn" type="submit">
+                {{ lang.reg_btn }}
+            </button>
+
+        </form>
+
+        <div class="register">
+            {{ lang.reg_exist }} 
+            <a href="/login">
+                {{ lang.reg_login }}
+            </a>
+        </div>
+
+    </div>
+
+</body>
+</html>

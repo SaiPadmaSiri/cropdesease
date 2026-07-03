@@ -1,0 +1,357 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AGRONETRA — Analytical Diagnostic Session</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        /* Floating Background Particle Elements Dynamic Styling */
+        .floating-leaf { position: fixed; font-size: 24px; pointer-events: none; opacity: 0.12; z-index: -1; animation: floatLeaf 14s linear infinite; }
+        .leaf1 { top: 10%; left: 5%; }
+        .leaf2 { top: 70%; left: 88%; animation-duration: 16s; }
+        .leaf3 { top: 85%; left: 10%; animation-duration: 11s; }
+        @keyframes floatLeaf { 0% { transform: translateY(0) rotate(0deg); opacity: 0; } 100% { transform: translateY(-100px) rotate(360deg); opacity: 0; } }
+
+        /* Custom Visual Severity Progress Bar Tracks */
+        .severity-gauge-track { background: #f5f5f5; width: 100%; height: 12px; border-radius: 50px; overflow: hidden; margin-top: 10px; border: 1px solid #e2e8f0; }
+        .severity-gauge-fill { height: 100%; border-radius: 50px; transition: width 1.5s cubic-bezier(0.1, 0.8, 0.2, 1); }
+        .fill-healthy { width: 5%; background: #43a047; }
+        .fill-mild { width: 25%; background: #fbc02d; }
+        .fill-moderate { width: 55%; background: #ff9800; }
+        .fill-severe { width: 90%; background: #e53935; }
+
+        /* Treatment Simulation Progression Segment */
+        .simulator-grid { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 15px; margin-top: 15px; }
+        .simulator-timeline-node { background: #f9fbf9; border: 1px solid #e8f5e9; padding: 12px; border-radius: 10px; text-align: center; }
+        .simulator-bar-track { background: #e2e8f0; width: 100%; height: 6px; border-radius: 10px; overflow: hidden; margin-top: 8px; }
+        .simulator-bar-fill { height: 100%; background: #43a047; }
+
+        /* Explainable AI Heatmap Visualization Grid Layout */
+        .xai-visualization-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-top: 15px; text-align: center; }
+        @media(min-width: 600px) { .xai-visualization-grid { grid-template-columns: 1fr 1fr; } }
+        .xai-frame-node { background: #fafafa; border: 1px solid #eef2f5; padding: 15px; border-radius: 12px; box-shadow: 0 4px 12px rgba(0,0,0,0.02); }
+        .xai-frame-node img { width: 100%; height: auto; max-width: 320px; border-radius: 8px; display: block; margin: 0 auto; object-fit: cover; box-shadow: 0 4px 10px rgba(0,0,0,0.08); }
+        
+        /* Language Toggle Button */
+        .lang-btn { background: rgba(0, 0, 0, 0.05); color: #2e7d32; border: 1px solid #43a047; padding: 6px 14px; border-radius: 20px; font-size: 12px; font-weight: 600; cursor: pointer; float: right; transition: 0.3s; }
+        .lang-btn:hover { background: #43a047; color: white; }
+    </style>
+</head>
+<body>
+
+    <div class="floating-leaf leaf1">🍃</div>
+    <div class="floating-leaf leaf2">🌿</div>
+    <div class="floating-leaf leaf3">☘️</div>
+
+    <div class="bg-overlay"></div>
+
+    <header class="hero-header">
+        <img src="{{ url_for('static', filename='images/logo.png') }}" alt="AGRONETRA" class="logo">
+        <h1>AGRONETRA</h1>
+        <p>AI-Powered Crop Disease Intelligence Platform</p>
+    </header>
+
+    <div class="nav-buttons">
+        <a href="/home">Home Workspace</a>
+        <a href="/history">Analytics History</a>
+        <a href="/analytics">📊 Live Charts Dashboard</a>
+    </div>
+
+    <div class="container" style="max-width: 900px;">
+        
+        {% if image_warning %}
+        <div style="background-color: #f8d7da; color: #721c24; padding: 15px; border-radius: 8px; border-left: 5px solid #dc3545; margin-bottom: 20px; font-weight: bold; text-align: left;">
+            ⚠️ <strong>Input Integrity Validation Exception:</strong> {{ image_warning }}
+        </div>
+        {% endif %}
+
+        <div style="width: 100%; overflow: hidden; margin-bottom: 15px;">
+            <button onclick="translateTelugu()" class="lang-btn">🌐 తెలుగులోకి మార్చండి</button>
+        </div>
+
+        <div class="dashboard-grid" style="margin-top: 0;">
+            <div class="stat-card" style="border-top: 4px solid #43a047;">
+                <p style="margin:0 0 4px 0; color: #666; font-weight: 600; font-size: 12px; text-transform: uppercase;" id="lbl-crop">Target Botanical Genus</p>
+                <h2 style="font-size: 24px;">{{ crop_type }}</h2>
+            </div>
+            <div class="stat-card" style="border-top: 4px solid #fbc02d;">
+                <p style="margin:0 0 4px 0; color: #666; font-weight: 600; font-size: 12px; text-transform: uppercase;" id="lbl-status">{{ lang.status }} Identification</p>
+                <h2 style="font-size: 20px; padding-top: 4px;" class="{{ severity_short|lower }}">{{ prediction.split(' - ')[1] if ' - ' in prediction else prediction }}</h2>
+            </div>
+            <div class="stat-card" style="border-top: 4px solid #43a047;">
+                <p style="margin:0 0 4px 0; color: #666; font-weight: 600; font-size: 12px; text-transform: uppercase;" id="lbl-confidence">Model Classifier Confidence</p>
+                <h2>{{ confidence }}%</h2>
+            </div>
+            <div class="stat-card" style="border-top: 4px solid #e53935;">
+                <p style="margin:0 0 4px 0; color: #666; font-weight: 600; font-size: 12px; text-transform: uppercase;" id="lbl-severity">Computer Vision Severity</p>
+                <h2 class="{{ severity_short|lower }}">{{ severity_short }}</h2>
+            </div>
+        </div>
+
+        <div class="main-card">
+            <h3 style="color: #2e7d32; margin-top: 0; margin-bottom: 5px; font-size: 18px; font-weight: bold;">📊 Pathological Diagnostic Severity Gauge</h3>
+            <div style="display: flex; justify-content: space-between; font-size: 12px; color: #555555; font-weight: bold; margin-top: 10px;">
+                <span>0% (Healthy)</span>
+                <span>Mild</span>
+                <span>Moderate</span>
+                <span>100% (Severe)</span>
+            </div>
+            <div class="severity-gauge-track">
+                <div class="severity-gauge-fill fill-{{ severity_short|lower }}"></div>
+            </div>
+            <p style="font-size: 13.5px; color: #333333; margin-top: 12px; margin-bottom: 0;">
+                Current Active Evaluation Area: <strong class="{{ severity_short|lower }}">{{ severity_short }} Allocation Matrix State</strong>
+            </p>
+        </div>
+
+        <div class="main-card" style="border-top: 4px solid #4c8da5;">
+            <h3 style="color: #4c8da5; margin-top: 0; margin-bottom: 5px; font-size: 18px; font-weight: bold;">🧠 Explainable AI (XAI) Attribution Localization</h3>
+            <p style="color: #555555; font-size: 13px; margin: 0 0 15px 0;">Visual verification mapping model structural focus coordinates to authenticate pixel deduction arrays</p>
+            
+            <div class="xai-visualization-grid">
+                <div class="xai-frame-node">
+                    <span style="font-size: 13px; font-weight: 600; color: #333; display: block; margin-bottom: 8px;">Original Leaf Source Ingestion</span>
+                    <img src="/{{ image_path }}" alt="Original Crop Source Leaf Snap">
+                </div>
+                <div class="xai-frame-node">
+                    <span style="font-size: 13px; font-weight: 600; color: #e53935; display: block; margin-bottom: 8px;">AI Computer Vision Feature Heatmap</span>
+                    <img src="/{{ heatmap_path }}" alt="AGRONETRA Extracted Heatmap Activation Overlay Layer">
+                </div>
+            </div>
+            <p style="margin-top: 15px; margin-bottom: 0; font-size: 13.5px; color: #4a5568; font-style: italic; line-height: 1.5; border-top: 1px solid #e8f5e9; padding-top: 12px;">
+                <strong>Model Diagnostic Verification Rationale:</strong> "{{ xai_explanation }}"
+            </p>
+        </div>
+
+        <div class="main-card" style="border-left: 5px solid #ff9800;">
+            <h3 style="color: #ff9800; margin-top: 0; margin-bottom: 5px; font-size: 18px; font-weight: bold;">🔮 Automated Countermeasure Lifecycle Recovery Simulator</h3>
+            <p style="color: #555555; font-size: 13px; margin: 0 0 15px 0;">Predictive progression modeling assuming immediate deployment of prescribed remediation calendar parameters</p>
+            
+            <div class="simulator-grid">
+                <div class="simulator-timeline-node">
+                    <span style="font-size: 12px; color: #e53935; font-weight: bold; display: block;">Current Ingestion Baseline</span>
+                    <h4 style="margin: 5px 0; font-size: 18px; color: #333;">{% if severity_short == 'Severe' %}75%{% elif severity_short == 'Moderate' %}50%{% elif severity_short == 'Mild' %}20%{% else %}0%{% endif %}</h4>
+                    <div class="simulator-bar-track">
+                        <div class="simulator-bar-fill" style="background: #e53935; width: {% if severity_short == 'Severe' %}75%{% elif severity_short == 'Moderate' %}50%{% elif severity_short == 'Mild' %}20%{% else %}0%{% endif %};"></div>
+                    </div>
+                </div>
+                <div class="simulator-timeline-node">
+                    <span style="font-size: 12px; color: #ff9800; font-weight: bold; display: block;">After Primary Dose (48h)</span>
+                    <h4 style="margin: 5px 0; font-size: 18px; color: #333;">{% if severity_short == 'Severe' %}40%{% elif severity_short == 'Moderate' %}25%{% elif severity_short == 'Mild' %}10%{% else %}0%{% endif %}</h4>
+                    <div class="simulator-bar-track">
+                        <div class="simulator-bar-fill" style="background: #ff9800; width: {% if severity_short == 'Severe' %}40%{% elif severity_short == 'Moderate' %}25%{% elif severity_short == 'Mild' %}10%{% else %}0%{% endif %};"></div>
+                    </div>
+                </div>
+                <div class="simulator-timeline-node">
+                    <span style="font-size: 12px; color: #43a047; font-weight: bold; display: block;">Canopy Stabilization (7 Days)</span>
+                    <h4 style="margin: 5px 0; font-size: 18px; color: #333;">{% if severity_short == 'Severe' %}15%{% elif severity_short == 'Moderate' %}8%{% elif severity_short == 'Mild' %}2%{% else %}0%{% endif %}</h4>
+                    <div class="simulator-bar-track">
+                        <div class="simulator-bar-fill" style="background: #43a047; width: {% if severity_short == 'Severe' %}15%{% elif severity_short == 'Moderate' %}8%{% elif severity_short == 'Mild' %}2%{% else %}0%{% endif %};"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="main-card" style="background: #f1f8e9; border-left: 5px solid #43a047; box-shadow: 0 4px 12px rgba(76,175,80,0.05);">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px;">
+                <h3 style="margin: 0; color: #2e7d32; font-size: 15px; text-transform: uppercase; letter-spacing: 0.5px; font-weight: bold;" id="rec-title">💡 Production Recommendation Vector</h3>
+                <button onclick="speakRecommendation()" class="btn-predict" style="width: auto; padding: 6px 14px; font-size: 12px; border-radius: 20px; box-shadow: none;">🔊 Read Aloud</button>
+            </div>
+            <p id="rec-text" style="margin: 0; font-size: 14.5px; color: #333333; font-weight: 500; line-height: 1.5;">{{ recommendation }}</p>
+        </div>
+
+        <div class="card">
+            <h3 style="color: #2e7d32; border-bottom: 1px solid #e8f5e9; padding-bottom: 6px; margin-top: 0; font-weight: bold; font-size: 18px;">📋 Pathological Profile Assessment</h3>
+            <h4 style="margin: 14px 0 4px 0; color: #333; font-size: 15px; font-weight: 700;">{{ lang.description }}</h4>
+            <p style="margin: 0 0 14px 0; color: #555555; font-size: 14px; line-height: 1.5;">{{ description }}</p>
+            
+            <div style="background: #f9fbf9; padding: 15px; border-radius: 8px; border: 1px solid #e8f5e9; margin-bottom: 20px; font-size: 13.5px; line-height: 1.4;">
+                <p style="margin: 0 0 8px 0; color: #2c3e50;"><strong>Diagnostic Symptoms Identified:</strong> {{ symptoms }}</p>
+                <p style="margin: 0; color: #2c3e50;"><strong>Biological Pathogen Cause Agent:</strong> <em style="color: #2e7d32; font-weight: 600;">{{ cause }}</em></p>
+            </div>
+
+            <h3 style="color: #2e7d32; border-bottom: 1px solid #e8f5e9; padding-bottom: 6px; margin-top: 25px; font-weight: bold; font-size: 18px;">🔬 Prescriptive Remediation Parameters</h3>
+            <h4 style="margin: 12px 0 4px 0; color: #333; font-size: 15px; font-weight: 700;">{{ lang.treatment }} Formulation</h4>
+            <p style="margin: 0 0 14px 0; color: #555555; font-size: 14px; line-height: 1.5;">{{ treatment }}</p>
+            
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-bottom: 15px;">
+                <div style="background: #f1f8e9; padding: 14px; border-radius: 8px; border-left: 4px solid #43a047; box-shadow: 0 2px 6px rgba(76,175,80,0.02);">
+                    <strong style="font-size: 12px; color: #2e7d32; text-transform: uppercase; display: block; margin-bottom: 4px; letter-spacing: 0.3px;">🌿 Organic Treatment Protocol</strong>
+                    <span style="font-size: 13.5px; color: #333333; font-weight: 500; line-height: 1.3; display: block;">{{ organic }}</span>
+                </div>
+                <div style="background: #fff5f5; padding: 14px; border-radius: 8px; border-left: 4px solid #e53935; box-shadow: 0 2px 6px rgba(229,57,53,0.02);">
+                    <strong style="font-size: 12px; color: #e53935; text-transform: uppercase; display: block; margin-bottom: 4px; letter-spacing: 0.3px;">🧪 Chemical Countermeasure</strong>
+                    <span style="font-size: 13.5px; color: #333333; font-weight: 500; line-height: 1.3; display: block;">{{ chemical }}</span>
+                </div>
+            </div>
+
+            <h4 style="margin: 18px 0 4px 0; color: #333; font-size: 15px; font-weight: 700;">{{ lang.prevention }} Protocols</h4>
+            <p style="margin: 0 0 15px 0; color: #555555; font-size: 14px; line-height: 1.5;">{{ prevention }}</p>
+
+            <h4 style="margin: 18px 0 6px 0; color: #333; font-size: 15px; font-weight: 700;">{{ lang.action_plan }} Pipeline Operations</h4>
+            <ul style="margin: 0; padding-left: 20px; font-size: 13.5px; color: #555555; line-height: 1.6;">
+                {% for point in action_plan %}
+                    <li>{{ point }}</li>
+                {% endfor %}
+            </ul>
+        </div>
+
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-top: 2px;">
+            <div class="main-card" style="margin: 0; border-left: 5px solid #0056b3;">
+                <h3 style="color: #0056b3; margin-top: 0; font-size: 14px; text-transform: uppercase; letter-spacing: 0.5px; font-weight: bold;">🌱 Crop Recovery Projection</h3>
+                <h2 style="font-size: 36px; margin: 10px 0; color: #333; font-weight: 800;">{{ recovery_score }}%</h2>
+                <p style="font-size: 13px; margin: 4px 0; color: #555;">Outlook Capacity: <strong>{{ recovery_status }}</strong></p>
+                <p style="font-size: 12px; color: #666; margin-top: 6px; line-height: 1.4;">{{ recovery_advice }}</p>
+            </div>
+            <div class="main-card" style="margin: 0; border-left: 5px solid #e53935;">
+                <h3 style="color: #e53935; margin-top: 0; font-size: 14px; text-transform: uppercase; letter-spacing: 0.5px; font-weight: bold;">🚨 Operational Priority Urgency</h3>
+                <h2 style="font-size: 36px; margin: 10px 0; color: #333; font-weight: 800;">{{ priority_score }} <span style="font-size: 16px; color: #777; font-weight: 400;">/ 10</span></h2>
+                <p style="font-size: 13px; margin: 4px 0; color: #555;">Status Index Tier: <strong class="{{ priority_status|lower }}">{{ priority_status }}</strong></p>
+                <p style="font-size: 12px; color: #666; margin-top: 6px; line-height: 1.4;">Recommended Deadline: <strong>{{ treatment_deadline }}</strong></p>
+            </div>
+            <div class="main-card" style="margin: 0; border-left: 5px solid #fbc02d; grid-column: span 2;">
+                <h3 style="color: #fbc02d; margin-top: 0; font-size: 14px; text-transform: uppercase; letter-spacing: 0.5px; font-weight: bold;">📉 Yield Deterioration & Economic Loss Matrix</h3>
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-top: 12px; border-bottom: 1px dashed #e8f5e9; padding-bottom: 12px;">
+                    <div>
+                        <span style="font-size: 12px; color: #666; font-weight: 600; text-transform: uppercase; letter-spacing: 0.3px;">Projected Crop Yield Loss</span>
+                        <p style="font-size: 24px; font-weight: 800; margin: 4px 0 0 0; color: #e53935;">{{ yield_loss }}%</p>
+                    </div>
+                    <div>
+                        <span style="font-size: 12px; color: #666; font-weight: 600; text-transform: uppercase; letter-spacing: 0.3px;">Mitigation Cost Allocation</span>
+                        <p style="font-size: 24px; font-weight: 800; margin: 4px 0 0 0; color: #43a047;">₹{{ estimated_cost }}</p>
+                    </div>
+                </div>
+                <p style="font-size: 14px; margin-top: 12px; margin-bottom: 0; color: #333; font-weight: 500;"><strong>Net Financial Field Impact Value Projection (Economic Impact):</strong> <span style="color: #e53935; font-weight: bold; font-size: 16px; margin-left: 4px;">₹{{ economic_loss }}</span></p>
+            </div>
+        </div>
+
+        <div class="main-card" style="margin-top: 30px;">
+            <h3 style="color: #2e7d32; margin-top: 0; margin-bottom: 15px; font-weight: bold; font-size: 18px;">🤖 Conversational AI Copilot Assistant</h3>
+            <div style="display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 15px;">
+                <button type="button" class="quick-btn" onclick="submitQuickQuestion('Will it spread?')">Will it spread?</button>
+                <button type="button" class="quick-btn" onclick="submitQuickQuestion('Can I save my crop?')">Can I save my crop?</button>
+                <button type="button" class="quick-btn" onclick="submitQuickQuestion('Treatment cost?')">Treatment cost?</button>
+                <button type="button" class="quick-btn" onclick="submitQuickQuestion('Prevention tips?')">Prevention tips?</button>
+            </div>
+
+            <form id="chatForm" action="/chat" method="POST">
+                <input type="hidden" name="disease" value="{{ prediction }}">
+                <input type="hidden" name="prediction_id" value="{{ prediction_id }}">
+                <input type="hidden" name="confidence" value="{{ confidence }}">
+                <input type="hidden" name="confidence_warning" value="{{ confidence_warning }}">
+                <input type="hidden" name="severity" value="{{ severity }}">
+                <input type="hidden" name="severity_short" value="{{ severity_short }}">
+                <input type="hidden" name="image_path" value="{{ image_path }}">
+                <input type="hidden" name="heatmap_path" value="{{ heatmap_path }}">
+                <input type="hidden" name="estimated_cost" value="{{ estimated_cost }}">
+                <input type="hidden" name="recommendation" value="{{ recommendation }}">
+                <input type="hidden" name="action_required" value="{{ action_required }}">
+                <input type="hidden" name="user_type" value="{{ user_type }}">
+                <input type="hidden" name="language" value="{{ language }}">
+                <input type="hidden" name="risk" value="{{ risk }}">
+                <input type="hidden" name="risk_display" value="{{ risk_display }}">
+                <input type="hidden" name="city_name" value="{{ city_name }}">
+                <input type="hidden" name="weather_temp" value="{{ weather.temperature }}">
+                <input type="hidden" name="weather_hum" value="{{ weather.humidity }}">
+                <input type="hidden" name="weather_cond" value="{{ weather.weather }}">
+                <input type="hidden" name="scan_time" value="{{ scan_time }}">
+                <input type="hidden" name="recovery_score" value="{{ recovery_score }}">
+                <input type="hidden" name="recovery_status" value="{{ recovery_status }}">
+                <input type="hidden" name="recovery_advice" value="{{ recovery_advice }}">
+                <input type="hidden" name="priority_score" value="{{ priority_score }}">
+                <input type="hidden" name="priority_status" value="{{ priority_status }}">
+                <input type="hidden" name="treatment_deadline" value="{{ treatment_deadline }}">
+                <input type="hidden" name="final_decision" value="{{ final_decision }}">
+                <input type="hidden" name="yield_loss" value="{{ yield_loss }}">
+                <input type="hidden" name="economic_loss" value="{{ economic_loss }}">
+                <input type="hidden" name="xai_explanation" value="{{ xai_explanation }}">
+                <input type="hidden" name="image_warning" value="{{ image_warning }}">
+                {% for step in treatment_plan %}
+                    <input type="hidden" name="treatment_plan" value="{{ step }}">
+                {% endfor %}
+
+                <div style="display: flex; gap: 12px; margin-top: 5px;">
+                    <input type="text" id="chatQuestion" name="question" placeholder="Query details about vector spreads, diagnostic steps, or preventative timelines..." required style="flex: 1; height: 45px;">
+                    <button type="submit" class="btn-predict" style="width: auto; padding: 0 25px; height: 45px; border-radius: 8px;">Query Copilot</button>
+                </div>
+            </form>
+
+            {% if answer %}
+            <div class="chat-response">
+                {{ answer }}
+            </div>
+            {% endif %}
+        </div>
+
+        <div style="margin-top: 35px; margin-bottom: 25px; display: grid; grid-template-columns: 1fr 1fr; gap: 20px;">
+            {% if not image_warning %}
+                <a href="/download_report/{{ prediction_id }}" class="btn-predict" style="text-align: center; text-decoration: none; padding-top: 14px; box-sizing: border-box; font-size: 15px;">📥 Download PDF Audit Report</a>
+            {% endif %}
+            <a href="/" class="btn-secondary" style="text-align: center; text-decoration: none; padding-top: 14px; box-sizing: border-box; font-size: 15px; {% if image_warning %}grid-column: span 2; height: 48px;{% endif %}">Analyze New Crop Target</a>
+        </div>
+
+    </div>
+
+    <footer>
+        AGRONETRA Crop Intelligence Systems v1.0 © 2026
+    </footer>
+
+    <script>
+        function submitQuickQuestion(text) {
+            document.getElementById('chatQuestion').value = text;
+            document.getElementById('chatForm').submit();
+        }
+
+        // Task 33: Voice AI Assistant Payload Handler
+        function speakRecommendation() {
+            let text = `AGRONETRA Diagnostic Report. Disease detected: {{ prediction.split(' - ')[1] if ' - ' in prediction else prediction }}. 
+                        Severity level is {{ severity_short }}. 
+                        Recommended action: {{ recommendation }}. 
+                        Expected Recovery is {{ recovery_score }} percent.`;
+            
+            let speech = new SpeechSynthesisUtterance(text);
+            speech.rate = 0.95; // Slightly slowed down for professional clarity
+            speech.pitch = 1;
+            speech.volume = 1;
+            speech.lang = 'en-US';
+            
+            window.speechSynthesis.cancel(); // Clear any ongoing speech queues
+            window.speechSynthesis.speak(speech);
+        }
+
+        // Task 34: Telugu DOM Translation Subsystem Override
+        function translateTelugu() {
+            // Target the specific dynamic element IDs injected into the DOM
+            const recTitle = document.getElementById("rec-title");
+            const recText = document.getElementById("rec-text");
+            const lblCrop = document.getElementById("lbl-crop");
+            const lblStatus = document.getElementById("lbl-status");
+            const lblConfidence = document.getElementById("lbl-confidence");
+            const lblSeverity = document.getElementById("lbl-severity");
+            
+            if (recTitle) recTitle.innerText = "💡 ఉత్పత్తి సిఫార్సు";
+            if (lblCrop) lblCrop.innerText = "లక్ష్య పంట పేరు";
+            if (lblStatus) lblStatus.innerText = "వ్యాధి నిర్ధారణ";
+            if (lblConfidence) lblConfidence.innerText = "మోడల్ ఖచ్చితత్వం";
+            if (lblSeverity) lblSeverity.innerText = "నష్టం తీవ్రత";
+            
+            // Check baseline server return value to apply correct localized string
+            if (recText) {
+                const currentText = recText.innerText.trim();
+                if (currentText.includes("Monitor crop regularly") && currentText.length < 30) {
+                    recText.innerText = "పంట ఆరోగ్యంగా ఉంది. నిరంతర పరిశీలన కొనసాగించండి.";
+                } else if (currentText.includes("Monitor crop regularly. Treat if symptoms expand.")) {
+                    recText.innerText = "కొద్దిపాటి లక్షణాలు ఉన్నాయి. క్రమం తప్పకుండా పర్యవేక్షించండి.";
+                } else if (currentText.includes("Treatment recommended within 2-3 days.")) {
+                    recText.innerText = "2-3 రోజులలోపు తక్షణ చికిత్స సిఫార్సు చేయబడింది.";
+                } else {
+                    recText.innerText = "తక్షణ చికిత్స అవసరం. దయచేసి సూచించిన మందులను వాడండి.";
+                }
+            }
+        }
+    </script>
+
+</body>
+</html>

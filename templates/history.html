@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>AGRONETRA — Analytical Field Log</title>
+    <style>
+        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background-color: #f4f7f6; color: #2c3e50; margin: 0; padding: 40px 20px; }
+        .container { max-width: 1000px; margin: 0 auto; background: white; padding: 35px; border-radius: 20px; box-shadow: 0 4px 20px rgba(0,0,0,0.08); text-align: center; }
+        h1 { color: #1e3d2f; margin-bottom: 25px; font-size: 28px; }
+        
+        /* Task 26: Enhanced Analytical Grid Matrix Architecture Layout styles */
+        .dashboard-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 15px; margin-bottom: 30px; }
+        .analytics-card { background: #fafbfc; padding: 20px; border-radius: 12px; border-top: 4px solid #1e3d2f; box-shadow: 0 2px 8px rgba(0,0,0,0.04); text-align: center; }
+        .analytics-card h3 { margin: 0 0 6px 0; font-size: 12px; color: #666; font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px; }
+        .analytics-card h2 { margin: 0; font-size: 24px; font-weight: bold; color: #2c3e50; word-wrap: break-word; }
+        
+        .chart-container { background: #fafbfc; border: 1px solid #eef2f5; padding: 25px; border-radius: 15px; margin-bottom: 35px; text-align: center; }
+        .chart-container h3 { margin-top: 0; margin-bottom: 15px; color: #1e3d2f; font-size: 16px; font-weight: bold; text-transform: uppercase; }
+        .chart-img { max-width: 100%; height: auto; border-radius: 8px; }
+
+        .table-responsive { overflow-x: auto; margin-top: 20px; border-radius: 12px; border: 1px solid #eef2f5; }
+        table { width: 100%; border-collapse: collapse; text-align: left; font-size: 14px; }
+        th { background-color: #1e3d2f; color: white; padding: 12px 15px; font-weight: 600; }
+        td { padding: 12px 15px; border-bottom: 1px solid #eef2f5; color: #4a5568; }
+        tr:hover { background-color: #f8faf9; }
+        .badge { padding: 4px 8px; border-radius: 20px; font-size: 12px; font-weight: bold; }
+        .badge-healthy { background-color: #d4edda; color: #155724; }
+        .badge-disease { background-color: #fdf2f2; color: #981b1b; }
+
+        .btn-wrapper { display: flex; gap: 15px; justify-content: center; margin-bottom: 25px; flex-wrap: wrap; }
+        .btn { display: inline-block; padding: 10px 22px; color: white; text-decoration: none; border-radius: 8px; font-weight: bold; font-size: 14px; transition: background 0.2s; }
+        .btn-primary { background-color: #1e3d2f; }
+        .btn-primary:hover { background-color: #13271e; }
+        .btn-secondary { background-color: #4c8da5; }
+        .btn-secondary:hover { background-color: #356375; }
+        .btn-back { background-color: #6c757d; }
+        .btn-back:hover { background-color: #5a6268; }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h1>📊 AGRONETRA Field Analytics & Historical Log</h1>
+
+    <div class="dashboard-grid">
+        <div class="analytics-card" style="border-top-color: #4c8da5;">
+            <h3>Total Scans</h3>
+            <h2>{{ stats.total_scans }}</h2>
+        </div>
+        <div class="analytics-card" style="border-top-color: #dc3545;">
+            <h3>Diseased Crops</h3>
+            <h2>{{ stats.diseased_scans }}</h2>
+        </div>
+        <div class="analytics-card" style="border-top-color: #f0a967;">
+            <h3>Average Confidence</h3>
+            <h2>{{ stats.avg_confidence }}%</h2>
+        </div>
+        <div class="analytics-card" style="border-top-color: #28a745;">
+            <h3>Total Treatment Cost</h3>
+            <h2>₹{{ stats.total_cost }}</h2>
+        </div>
+    </div>
+    
+    <div class="analytics-card" style="border-top-color: #7f5a83; margin-bottom: 30px; text-align: left; padding: 15px 25px;">
+        <h3 style="margin-bottom: 4px;">Most Common Disease Outbreak</h3>
+        <h2 style="font-size: 18px; color: #2c3e50;">
+            {{ stats.most_common_disease.split(' - ')[1] if ' - ' in stats.most_common_disease else stats.most_common_disease }}
+        </h2>
+    </div>
+
+    <div class="btn-wrapper">
+        <a href="/export_csv" class="btn btn-secondary">📥 Export Analytical Dataset to CSV</a>
+        <a href="/" class="btn btn-back">Scan New Leaf Target</a>
+    </div>
+
+    {% if stats.chart_exists %}
+    <div class="chart-container">
+        <h3>Graph Insight: Disease Distribution Trends</h3>
+        <img src="{{ url_for('static', filename='charts/disease_distribution.png') }}?v={{ stats.total_scans }}" class="chart-img" alt="AGRONETRA Distribution Pie Chart" width="500">
+    </div>
+    {% endif %}
+
+    <h2 style="color: #1e3d2f; text-align: left; font-size: 18px; margin-top: 30px; margin-bottom: 10px;">📋 Historical Audit Record Trail</h2>
+    <div class="table-responsive">
+        <table>
+            <thead>
+                <tr>
+                    <th>Scan ID</th>
+                    <th>Date & Time</th>
+                    <th>Image Name</th>
+                    <th>Botanical Identification Status</th>
+                    <th>Confidence</th>
+                    <th>User Type</th>
+                    <th>Mitigation Cost</th>
+                    <th>Report</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for row in records %}
+                <tr>
+                    <td><strong>#{{ row[0] }}</strong></td>
+                    <td>{{ row[6] }}</td>
+                    <td style="font-family: monospace; font-size: 12px;">{{ row[1] }}</td>
+                    <td>
+                        {% if 'Healthy' in row[2] %}
+                            <span class="badge badge-healthy">🟢 Healthy</span>
+                        {% else %}
+                            <span class="badge badge-disease">🔴 {{ row[2].split(' - ')[1] if ' - ' in row[2] else row[2] }}</span>
+                        {% endif %}
+                    </td>
+                    <td><strong>{{ row[3] }}%</strong></td>
+                    <td style="text-transform: capitalize;">{{ row[4] }}</td>
+                    <td style="font-weight: 600; color: #1e3d2f;">₹{{ row[5] }}</td>
+                    <td>
+                        <a href="/download_report/{{ row[0] }}" style="color: #4c8da5; font-weight: bold; text-decoration: none;">📄 PDF</a>
+                    </td>
+                </tr>
+                {% else %}
+                <tr>
+                    <td colspan="8" style="text-align: center; color: #888; padding: 30px;">No diagnostic records found in database log profile yet.</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+
+</body>
+</html>

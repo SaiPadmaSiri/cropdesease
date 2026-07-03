@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AGRONETRA — Select Language</title>
+    
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&family=Noto+Sans+Telugu:wght@400;600;700&display=swap" rel="stylesheet">
+    
+    <style>
+        * { 
+            box-sizing: border-box; 
+            font-family: 'Noto Sans Telugu', 'Poppins', sans-serif; 
+        }
+        
+        body { 
+            background: linear-gradient(135deg, #8BC34A, #4CAF50); 
+            height: 100vh; 
+            margin: 0; 
+            display: flex; 
+            justify-content: center; 
+            align-items: center; 
+        }
+        
+        .card { 
+            width: 90%; 
+            max-width: 700px; 
+            background: white; 
+            border-radius: 30px; 
+            padding: 40px; 
+            text-align: center; 
+            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.25); 
+        }
+        
+        .logo { 
+            width: 120px; 
+            margin-bottom: 15px; 
+            animation: zoomIn 1s ease; 
+        }
+        
+        @keyframes zoomIn { 
+            from { 
+                transform: scale(0.5); 
+                opacity: 0; 
+            } 
+            to { 
+                transform: scale(1); 
+                opacity: 1; 
+            } 
+        }
+        
+        h1 { 
+            color: #2E7D32; 
+            font-size: 32px; 
+            margin-top: 0; 
+            margin-bottom: 5px; 
+        }
+        
+        .subtitle { 
+            color: #666; 
+            margin-bottom: 30px; 
+            font-weight: 500; 
+        }
+        
+        .languages { 
+            display: grid; 
+            grid-template-columns: repeat(3, 1fr); 
+            gap: 20px; 
+        }
+        
+        .lang-btn { 
+            text-decoration: none; 
+            background: #E8F5E9; 
+            padding: 20px; 
+            border-radius: 20px; 
+            color: #1B5E20; 
+            font-size: 20px; 
+            font-weight: bold; 
+            transition: 0.3s; 
+            display: flex; 
+            align-items: center; 
+            justify-content: center; 
+            gap: 10px; 
+            border: 2px solid transparent; 
+        }
+        
+        .lang-btn:hover { 
+            transform: scale(1.05); 
+            background: #4CAF50; 
+            color: white; 
+            border-color: #388E3C; 
+            box-shadow: 0 10px 20px rgba(76, 175, 80, 0.3); 
+        }
+        
+        @media(max-width: 600px) { 
+            .languages { 
+                grid-template-columns: 1fr; 
+            } 
+        }
+    </style>
+</head>
+<body>
+    <div class="card">
+        <img src="{{ url_for('static', filename='images/logo.png') }}" class="logo" alt="AGRONETRA Logo">
+        <h1>🌱 AGRONETRA</h1>
+        <p class="subtitle">Choose Your Language / మీ భాషను ఎంచుకోండి</p>
+        
+        <div class="languages">
+            <a href="/set_language/en" class="lang-btn">🇬🇧 English</a>
+            <a href="/set_language/te" class="lang-btn">🇮🇳 తెలుగు</a>
+            <a href="/set_language/hi" class="lang-btn">🇮🇳 हिन्दी</a>
+        </div>
+    </div>
+</body>
+</html>

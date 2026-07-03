@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AGRONETRA</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;800&display=swap" rel="stylesheet">
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            background: linear-gradient(135deg, #43a047, #1b5e20); /* Deep premium agricultural green */
+            color: white;
+            font-family: 'Poppins', sans-serif;
+            overflow: hidden;
+        }
+        .logo-container {
+            animation: pulse 2s infinite cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        .logo {
+            width: 160px;
+            filter: drop-shadow(0 15px 25px rgba(0,0,0,0.3));
+        }
+        h1 {
+            font-size: 46px;
+            font-weight: 800;
+            margin-top: 25px;
+            margin-bottom: 5px;
+            letter-spacing: 3px;
+            text-shadow: 0 4px 15px rgba(0,0,0,0.3);
+        }
+        .tagline {
+            font-size: 16px;
+            font-weight: 500;
+            opacity: 0.9;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+        }
+        @keyframes pulse {
+            0% { transform: scale(0.95); }
+            50% { transform: scale(1.05); }
+            100% { transform: scale(0.95); }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="logo-container">
+        <img src="{{ url_for('static', filename='images/logo.png') }}" class="logo" alt="AGRONETRA Logo">
+    </div>
+    
+    <h1>AGRONETRA</h1>
+    <div class="tagline">Crop Intelligence Systems</div>
+
+    <script>
+        // Wait 2.5 seconds for the animation to play, then route to the intelligent destination
+        setTimeout(function() {
+            window.location.href = "{{ next_route }}";
+        }, 2500);
+    </script>
+
+</body>
+</html>
