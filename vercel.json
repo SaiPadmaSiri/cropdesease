@@ -1,0 +1,14 @@
+{
+  "version": 2,
+  "builds": [
+    { "src": "app.py", "use": "@vercel/python" }
+  ],
+  "routes": [
+    { "src": "/(.*)", "dest": "app.py" }
+  ],
+  "env": {
+    "MODEL_URL": "@model_url",
+    "WEATHER_API_KEY": "@weather_api_key",
+    "SECRET_KEY": "@secret_key"
+  }
+}
